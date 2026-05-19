@@ -85,6 +85,20 @@ BEGIN
     DELETE FROM Musteriler WHERE musteri_id = p_musteri_id;
 END$$
 
+CREATE PROCEDURE `MusteriGuncelle`(
+    IN p_musteri_id INT,
+    IN p_ad VARCHAR(50), 
+    IN p_soyad VARCHAR(50), 
+    IN p_telefon VARCHAR(20), 
+    IN p_eposta VARCHAR(100), 
+    IN p_adres TEXT
+)
+BEGIN
+    UPDATE Musteriler 
+    SET ad = p_ad, soyad = p_soyad, telefon = p_telefon, eposta = p_eposta, adres = p_adres 
+    WHERE musteri_id = p_musteri_id;
+END$$
+
 CREATE PROCEDURE `MusterilerHepsi`()
 BEGIN
     SELECT * FROM Musteriler ORDER BY musteri_id DESC;
@@ -108,6 +122,18 @@ CREATE PROCEDURE `KiyafetTuruSil`(
 )
 BEGIN
     DELETE FROM Kiyafet_Turleri WHERE kiyafet_tur_id = p_kiyafet_tur_id;
+END$$
+
+CREATE PROCEDURE `KiyafetTuruGuncelle`(
+    IN p_kiyafet_tur_id INT,
+    IN p_ad VARCHAR(100), 
+    IN p_fiyat DECIMAL(10,2), 
+    IN p_bakim_notlari TEXT
+)
+BEGIN
+    UPDATE Kiyafet_Turleri 
+    SET ad = p_ad, fiyat = p_fiyat, bakim_notlari = p_bakim_notlari 
+    WHERE kiyafet_tur_id = p_kiyafet_tur_id;
 END$$
 
 CREATE PROCEDURE `KiyafetTurleriHepsi`()
