@@ -15,11 +15,13 @@ jobs:
     permissions:
       contents: read
       packages: write
+      id-token: write # Google Cloud Workload Identity (Şifresiz Bağlantı) için ŞART!
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 1. Docker İmajını Oluşturma ve GitHub'a Yükleme (Senin orijinal adımların)
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -43,3 +45,23 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      # 2. Google Cloud'a Şifresiz Bağlantı (Az önce kurduğumuz köprü)
+      - name: Google Cloud'a Kimlik Doğrulama
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: 'projects/999740010023/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+          service_account: 'github-actions-sa@project-f75dc94f-2ec6-4f08-bcb.iam.gserviceaccount.com'
+
+      # 3. Kubernetes (GKE) Cluster'a Bağlanma
+      - name: GKE Cluster'a Bağlan
+        uses: google-github-actions/get-gke-credentials@v2
+        with:
+          cluster_name: 'kuru-temizleme-cluster'
+          location: 'europe-west1-b'
+          project_id: 'project-f75dc94f-2ec6-4f08-bcb'
+
+      # 4. Kodları Canlıya Alma (Deploy)
+      - name: Kubernetes Manifestlerini Uygula
+        run: |
+          kubectl apply -f k8s/
