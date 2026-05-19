@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment
+  labels:
+    app: kurutemizleme-web
+spec:
+  replicas: 3 # Scaling (Ölçekleme) için 3 kopya çalıştırıyoruz
+  strategy:
+    type: RollingUpdate # Kesintisiz güncelleme stratejisi
+    rollingUpdate:
+      maxSurge: 1 # Güncelleme sırasında eklenebilecek maksimum ekstra pod
+      maxUnavailable: 1 # Güncelleme sırasında kapatılabilecek maksimum pod
+  selector:
+    matchLabels:
+      app: kurutemizleme-web
+  template:
+    metadata:
+      labels:
+        app: kurutemizleme-web
+    spec:
+      containers:
+      - name: web
+        # GitHub Container Registry'den imajı çeker
+        image: ghcr.io/elanur04/kuru-temizleme-sistemi:latest 
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: DB_SERVER
+          value: "db" # mysql-service'in adı
+        - name: DB_USERNAME
+          value: "root"
+        - name: DB_PASSWORD
+          value: "password"
+        - name: DB_NAME
+          value: "KuruTemizleme"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
