@@ -22,7 +22,7 @@ spec:
       containers:
       - name: web
         # GitHub Container Registry'den imajı çeker
-        image: ghcr.io/elanur04/kuru-temizleme-sistemi:latest 
+        image: ghcr.io/elanur04/kuru-temizleme-k8s:latest 
         imagePullPolicy: Always
         ports:
         - containerPort: 80

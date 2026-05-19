@@ -42,7 +42,7 @@ Sitemize aniden binlerce müşteri girerse, sitemizin çökmemesi için kopya sa
 ### Rolling Update (Kesintisiz Güncelleme)
 Koda yeni bir özellik eklediğimizde, siteyi kapatıp açmak yerine "Rolling Update" yaparız. Sistem, yeni sürüm podları teker teker açar ve eskileri teker teker kapatır. Böylece site 1 saniye bile kapanmaz. `web-deployment.yaml` içerisinde `strategy: RollingUpdate` ayarı ile bunu tanımladık.
 *Güncellemeyi başlatmak için:*
-`kubectl set image deployment/web-deployment web=ghcr.io/elanur04/kuru-temizleme-sistemi:yeni_surum`
+`kubectl set image deployment/web-deployment web=ghcr.io/elanur04/kuru-temizleme-k8s:yeni_surum`
 
 ### Rollback (Geri Alma)
 Eğer yeni yüklediğimiz kodda bir hata çıkarsa (sitede sayfalar açılmazsa vb.), tek bir komutla anında eski çalışan sürüme geri dönebiliriz. Sistem hatayı kendi düzeltir:
