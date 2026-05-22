@@ -57,6 +57,40 @@ CREATE TABLE IF NOT EXISTS `Odemeler` (
   FOREIGN KEY (`siparis_id`) REFERENCES `Siparisler`(`siparis_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Müşteri Düzenleme Log Tablosu
+CREATE TABLE IF NOT EXISTS `Musteri_Duzenleme` (
+  `duzenleme_id` int(11) NOT NULL AUTO_INCREMENT,
+  `musteri_id` int(11) NOT NULL,
+  `eski_ad` varchar(50) DEFAULT NULL,
+  `yeni_ad` varchar(50) DEFAULT NULL,
+  `eski_soyad` varchar(50) DEFAULT NULL,
+  `yeni_soyad` varchar(50) DEFAULT NULL,
+  `eski_telefon` varchar(20) DEFAULT NULL,
+  `yeni_telefon` varchar(20) DEFAULT NULL,
+  `eski_eposta` varchar(100) DEFAULT NULL,
+  `yeni_eposta` varchar(100) DEFAULT NULL,
+  `eski_adres` text DEFAULT NULL,
+  `yeni_adres` text DEFAULT NULL,
+  `duzenleme_tarihi` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`duzenleme_id`),
+  FOREIGN KEY (`musteri_id`) REFERENCES `Musteriler`(`musteri_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Kıyafet Türü Düzenleme Log Tablosu
+CREATE TABLE IF NOT EXISTS `Kiyafet_Turu_Duzenleme` (
+  `duzenleme_id` int(11) NOT NULL AUTO_INCREMENT,
+  `kiyafet_tur_id` int(11) NOT NULL,
+  `eski_ad` varchar(100) DEFAULT NULL,
+  `yeni_ad` varchar(100) DEFAULT NULL,
+  `eski_fiyat` decimal(10,2) DEFAULT NULL,
+  `yeni_fiyat` decimal(10,2) DEFAULT NULL,
+  `eski_bakim_notlari` text DEFAULT NULL,
+  `yeni_bakim_notlari` text DEFAULT NULL,
+  `duzenleme_tarihi` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`duzenleme_id`),
+  FOREIGN KEY (`kiyafet_tur_id`) REFERENCES `Kiyafet_Turleri`(`kiyafet_tur_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 -- --------------------------------------------------------
 -- 2. SAKLI YORDAMLARIN (STORED PROCEDURES) OLUŞTURULMASI
@@ -203,6 +237,53 @@ CREATE PROCEDURE `OdemeEkle`(
 BEGIN
     INSERT INTO Odemeler (siparis_id, odeme_tutari, odeme_turu) 
     VALUES (p_siparis_id, p_odeme_tutari, p_odeme_turu);
+END$$
+
+
+-- --------------------------------------------------------
+-- 3. TETİKLEYİCİLERİN (TRIGGERS) OLUŞTURULMASI
+-- --------------------------------------------------------
+
+-- Müşteri Güncelleme Tetikleyicisi
+CREATE TRIGGER `AfterMusteriGuncelle` 
+AFTER UPDATE ON `Musteriler`
+FOR EACH ROW
+BEGIN
+    INSERT INTO `Musteri_Duzenleme` (
+        musteri_id, 
+        eski_ad, yeni_ad, 
+        eski_soyad, yeni_soyad, 
+        eski_telefon, yeni_telefon, 
+        eski_eposta, yeni_eposta, 
+        eski_adres, yeni_adres
+    ) 
+    VALUES (
+        OLD.musteri_id, 
+        OLD.ad, NEW.ad, 
+        OLD.soyad, NEW.soyad, 
+        OLD.telefon, NEW.telefon, 
+        OLD.eposta, NEW.eposta, 
+        OLD.adres, NEW.adres
+    );
+END$$
+
+-- Kıyafet Türü Güncelleme Tetikleyicisi
+CREATE TRIGGER `AfterKiyafetTuruGuncelle` 
+AFTER UPDATE ON `Kiyafet_Turleri`
+FOR EACH ROW
+BEGIN
+    INSERT INTO `Kiyafet_Turu_Duzenleme` (
+        kiyafet_tur_id, 
+        eski_ad, yeni_ad, 
+        eski_fiyat, yeni_fiyat, 
+        eski_bakim_notlari, yeni_bakim_notlari
+    ) 
+    VALUES (
+        OLD.kiyafet_tur_id, 
+        OLD.ad, NEW.ad, 
+        OLD.fiyat, NEW.fiyat, 
+        OLD.bakim_notlari, NEW.bakim_notlari
+    );
 END$$
 
 DELIMITER ;
