@@ -11,4 +11,3 @@ try {
 } catch(PDOException $e) {
     die("HATA: Veritabanına bağlanılamadı. " . $e->getMessage());
 }
-?> 
