@@ -13,10 +13,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ekle'])) {
 }
 
 // Kıyafet Türü Silme
+$error_msg = null;
 if (isset($_GET['sil'])) {
-    $stmt = $pdo->prepare("CALL KiyafetTuruSil(?)");
-    $stmt->execute([$_GET['sil']]);
-    $stmt->closeCursor(); // Silme sorgusu sonuç kümesini kapat
+    try {
+        $stmt = $pdo->prepare("CALL KiyafetTuruSil(?)");
+        $stmt->execute([$_GET['sil']]);
+        $stmt->closeCursor(); // Silme sorgusu sonuç kümesini kapat
+        header('Location: kiyafet_turleri.php');
+        exit();
+    } catch (PDOException $e) {
+        if ($e->getCode() == '23000') {
+            $error_msg = "Bu kıyafet türüne ait sipariş kayıtları bulunmaktadır. Önce ilişkili siparişleri silmeniz veya değiştirmeniz gerekmektedir.";
+        } else {
+            $error_msg = "Silme işlemi sırasında bir hata oluştu: " . $e->getMessage();
+        }
+    }
 }
 
 // Kıyafet Türlerini Listele
@@ -70,6 +81,13 @@ $stmt->closeCursor(); // Listeleme sorgusu sonuç kümesini kapat
             <!-- Main Content -->
             <div class="col-md-10 content">
                 <h2 class="mb-4">Kıyafet Türleri Yönetimi</h2>
+
+                <?php if ($error_msg): ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i> <?= htmlspecialchars($error_msg) ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
 
                 <!-- Kıyafet Türü Ekleme Formu -->
                 <div class="card mb-4">
