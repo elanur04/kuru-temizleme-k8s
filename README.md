@@ -58,6 +58,4 @@ Süreç şöyle işler:
 5. Oluşturduğu bu yeni paketi (Docker imajını) GitHub Container Registry'ye (ghcr.io) yükler (Push).
 6. (İleri seviyede bu aşamadan sonra K8s'e de haber verilerek Rolling Update otomatik tetiklenir).
 
-## 🚀 Sunum İçin İpuçları
-* Sunumunuzda jargona boğulmadan *"Hocam, biz veritabanı uçmasın diye PVC kullandık, güvenlik için Network Policy ile veritabanını dışarıya kapattık"* gibi gündelik bir dille anlatmanız çok etkili olacaktır.
-* Sistemi 3 pod ile ölçeklendirdiğinizi (Scaling) ve sitenin asla kapanmayacağını vurgulayın.
+
