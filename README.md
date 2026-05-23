@@ -30,6 +30,9 @@ Pod'ların (uygulamaların) IP adresleri sürekli değişebildiği için onlara 
 ### PV (Persistent Volume) ve PVC (Persistent Volume Claim)
 Pod'lar (uygulamalar) silindiğinde veya çöktüğünde içlerindeki veriler de silinir. Bu durum web sitesi için sorun olmasa da **Veritabanı** için felakettir. Bu yüzden `mysql-pvc.yaml` dosyasını oluşturduk. Bu sayede MySQL çöksede, müşteri kayıtları Google Cloud'un kalıcı disklerinde (1 GB'lık alan) güvenle saklanmaya devam eder.
 
+### ConfigMap (Veritabanı Otomatik Kurulumu)
+Kubernetes üzerinde MySQL podu ilk defa çalıştırıldığında veritabanı tamamen boş başlar. Web uygulamasının çalışması için gerekli olan veritabanı tablolarının, saklı yordamların ve tetikleyicilerin otomatik kurulması amacıyla `mysql-configmap.yaml` dosyasını oluşturduk. Bu dosya, `database.sql` içeriğini Kubernetes üzerinde güvenli bir şekilde saklar ve MySQL poduna mount edilerek sistemin tamamen sıfır müdahaleyle (cloud-native) kurulmasını sağlar.
+
 ### Network Policy
 Sistemimizin güvenlik duvarıdır (Firewall). `network-policy.yaml` dosyamızda şu kuralı koyduk: *"MySQL veritabanına sadece ve sadece 'kurutemizleme-web' etiketine sahip olan uygulamalar (yani bizim sitemiz) bağlanabilir."* Bu, siber güvenlik açısından kritik bir önlemdir.
 
@@ -56,7 +59,7 @@ Süreç şöyle işler:
 3. Bulutta sanal bir Ubuntu bilgisayar açar.
 4. Bizim `Dockerfile` dosyamızı kullanarak uygulamamızı yeni baştan paketler (Build).
 5. Oluşturduğu bu yeni paketi (Docker imajını) GitHub Container Registry'ye (ghcr.io) yükler (Push).
-6. (İleri seviyede bu aşamadan sonra K8s'e de haber verilerek Rolling Update otomatik tetiklenir).
+6. Deployment'ların uygulanmasından sonra `kubectl rollout restart deployment/web-deployment` komutu otomatik çalıştırılarak GKE'deki web podlarının yeni imajı çekmesi ve kesintisiz güncelleme yapması (Rolling Update) garanti altına alınır.
 
 ## 🚀 Sunum İçin İpuçları
 * Sunumunuzda jargona boğulmadan *"Hocam, biz veritabanı uçmasın diye PVC kullandık, güvenlik için Network Policy ile veritabanını dışarıya kapattık"* gibi gündelik bir dille anlatmanız çok etkili olacaktır.
