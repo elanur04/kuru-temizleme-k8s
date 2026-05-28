@@ -2,22 +2,22 @@
 
 Bu proje, PHP ve MySQL kullanılarak geliştirilmiş "Kuru Temizleme Sistemi"nin Docker ile container haline getirilip, Google Kubernetes Engine (GKE) üzerinde çalıştırılması ve GitHub Actions ile CI/CD süreçlerinin otomatikleştirilmesi işlemlerini kapsamaktadır.
 
-## 📌 1. Uygulama Mimarisi
+##  1. Uygulama Mimarisi
 Uygulamamız temelde iki ana bileşenden oluşmaktadır:
 - **Frontend/Backend (Web Katmanı):** PHP 8.2 ve Apache kullanılarak geliştirilmiştir. Kullanıcı arayüzünü sunar ve iş mantığını işletir.
 - **Veritabanı Katmanı:** MySQL 8.0 kullanılarak müşteri verilerini, sipariş durumlarını ve sistem loglarını saklar.
 
-## 📌 2. Sistem Mimarisi
+##  2. Sistem Mimarisi
 Sistemimiz, fiziksel sunuculara olan bağımlılığı ortadan kaldırarak **Bulut Bilişim (Cloud Computing)** prensiplerine uygun olarak tasarlanmıştır. 
 Uygulama Docker sayesinde paketlenmiş (containerize edilmiş) ve herhangi bir bilgisayarda aynı şekilde çalışması garanti altına alınmıştır. Tüm altyapı yönetimi, yük dengelemesi (Load Balancing) ve kendi kendini onarma (Self-Healing) özellikleri Google Kubernetes Engine (GKE) üzerinden sağlanmaktadır.
 
-## 📌 3. Kubernetes Mimarisi
+## 3. Kubernetes Mimarisi
 Projenin Kubernetes ortamındaki yerleşimi şu şekildedir:
 - **Uygulama Podları:** PHP Apache imajını çalıştıran Pod'lar (Replica sayısı 3 olarak ayarlanmıştır).
 - **Veritabanı Podu:** MySQL imajını çalıştıran ve kalıcı veriye sahip tekil Pod.
 - **Service'ler:** Dışarıdan gelen kullanıcı isteklerini Web Pod'larına dağıtan bir **LoadBalancer Service** ve Web Pod'larının Veritabanı Pod'una güvenli bir şekilde ulaşmasını sağlayan bir **ClusterIP Service**.
 
-## 📌 4. Kullanılan K8s Bileşenleri ve Görevleri
+##  4. Kullanılan K8s Bileşenleri ve Görevleri
 
 ### Deployment
 Uygulamalarımızı yönetmek için kullanılır. Çöken bir uygulamanın yerine yenisini açmak, güncellemeleri yönetmek ve kopya sayısını belirlemek onun görevidir. `web-deployment.yaml` ve `mysql-deployment.yaml` olarak iki ayrı dosya oluşturduk.
@@ -36,7 +36,7 @@ Kubernetes üzerinde MySQL podu ilk defa çalıştırıldığında veritabanı t
 ### Network Policy
 Sistemimizin güvenlik duvarıdır (Firewall). `network-policy.yaml` dosyamızda şu kuralı koyduk: *"MySQL veritabanına sadece ve sadece 'kurutemizleme-web' etiketine sahip olan uygulamalar (yani bizim sitemiz) bağlanabilir."* Bu, siber güvenlik açısından kritik bir önlemdir.
 
-## 📌 5. Ölçekleme (Scaling), Rolling Update ve Rollback
+##  5. Ölçekleme (Scaling), Rolling Update ve Rollback
 
 ### Ölçekleme (Scaling)
 Sitemize aniden binlerce müşteri girerse, sitemizin çökmemesi için kopya sayısını artırmamız gerekir. Biz Deployment dosyasında `replicas: 3` diyerek sistemi zaten baştan 3 kopya başlattık. İstenirse şu komutla anında sayı 10'a çıkarılabilir:
@@ -51,7 +51,7 @@ Koda yeni bir özellik eklediğimizde, siteyi kapatıp açmak yerine "Rolling Up
 Eğer yeni yüklediğimiz kodda bir hata çıkarsa (sitede sayfalar açılmazsa vb.), tek bir komutla anında eski çalışan sürüme geri dönebiliriz. Sistem hatayı kendi düzeltir:
 `kubectl rollout undo deployment/web-deployment`
 
-## 📌 6. CI/CD Pipeline Akışı (GitHub Actions)
+## 6. CI/CD Pipeline Akışı (GitHub Actions)
 Yazılımcı olarak bizim işimiz kod yazmaktır, sunucuyla uğraşmak değil. Bu yüzden otomasyon (CI/CD) kurduk.
 Süreç şöyle işler:
 1. Biz bilgisayarımızda kodu yazarız ve `git push` komutuyla GitHub'a göndeririz.
