@@ -6,9 +6,8 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
--- --------------------------------------------------------
+
 -- 1. TABLOLARIN OLUŞTURULMASI
--- --------------------------------------------------------
 
 -- Müşteriler Tablosu
 CREATE TABLE IF NOT EXISTS `Musteriler` (
@@ -92,13 +91,12 @@ CREATE TABLE IF NOT EXISTS `Kiyafet_Turu_Duzenleme` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
--- --------------------------------------------------------
+
 -- 2. SAKLI YORDAMLARIN (STORED PROCEDURES) OLUŞTURULMASI
--- --------------------------------------------------------
 
 DELIMITER $$
 
--- Müşteri İşlemleri --------------------------------------
+-- Müşteri İşlemleri
 
 CREATE PROCEDURE `MusteriEkle`(
     IN p_ad VARCHAR(50), 
@@ -139,7 +137,7 @@ BEGIN
 END$$
 
 
--- Kıyafet İşlemleri --------------------------------------
+-- Kıyafet İşlemleri 
 
 CREATE PROCEDURE `KiyafetTuruEkle`(
     IN p_ad VARCHAR(100), 
@@ -176,7 +174,7 @@ BEGIN
 END$$
 
 
--- Sipariş İşlemleri --------------------------------------
+-- Sipariş İşlemleri
 
 CREATE PROCEDURE `YeniSiparisOlustur`(
     IN p_musteri_id INT, 
@@ -240,9 +238,9 @@ BEGIN
 END$$
 
 
--- --------------------------------------------------------
+
 -- 3. TETİKLEYİCİLERİN (TRIGGERS) OLUŞTURULMASI
--- --------------------------------------------------------
+
 
 -- Müşteri Güncelleme Tetikleyicisi
 CREATE TRIGGER `AfterMusteriGuncelle` 

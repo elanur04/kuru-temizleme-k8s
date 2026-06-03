@@ -1,0 +1,3 @@
+Github linki : https://github.com/elanur04/kuru-temizleme-k8s
+Uygulama web sayfası: http://34.156.225.45
+Uygulama demo videosu: https://youtu.be/Qqmm9rNvvak

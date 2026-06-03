@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     && docker-php-ext-install pdo pdo_mysql zip
 
-# Apache mod_rewrite modülünü aktif ediyoruz (URL yönlendirmeleri için faydalı olabilir)
+# Apache mod_rewrite modülünü aktif ediyoruz 
 RUN a2enmod rewrite
 
 # Proje dosyalarını container içerisindeki web sunucusu dizinine kopyalıyoruz
