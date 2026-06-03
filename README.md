@@ -61,4 +61,7 @@ Süreç şöyle işler:
 5. Oluşturduğu bu yeni paketi (Docker imajını) GitHub Container Registry'ye (ghcr.io) yükler (Push).
 6. Deployment'ların uygulanmasından sonra `kubectl rollout restart deployment/web-deployment` komutu otomatik çalıştırılarak GKE'deki web podlarının yeni imajı çekmesi ve kesintisiz güncelleme yapması (Rolling Update) garanti altına alınır.
 
+Demo videosu: 
+https://youtu.be/Qqmm9rNvvak
+
 
