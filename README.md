@@ -64,4 +64,16 @@ Süreç şöyle işler:
 Demo videosu: 
 https://youtu.be/Qqmm9rNvvak
 
+## 7. Yerelde Çalıştırma (Docker Compose)
 
+```bash
+cp .env.example .env   # MYSQL_ROOT_PASSWORD değerini belirleyin
+docker compose up --build
+```
+
+Uygulama <http://localhost:8080> adresinde açılır. Veritabanı şifresi koda yazılmaz; `.env` dosyasından okunur.
+
+## Belgeler
+
+- Proje raporu: [PDF](Bulut-Bilisim-ve-Kubernetes-Tabanli-Kuru-Temizleme-Yonetim-Sistemi.pdf.pdf)
+- Demo videosu: <https://youtu.be/Qqmm9rNvvak>
