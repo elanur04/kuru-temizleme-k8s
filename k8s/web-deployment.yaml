@@ -32,7 +32,10 @@ spec:
         - name: DB_USERNAME
           value: "root"
         - name: DB_PASSWORD
-          value: "password"
+          valueFrom:
+            secretKeyRef:
+              name: kurutemizleme-db
+              key: MYSQL_ROOT_PASSWORD
         - name: DB_NAME
           value: "KuruTemizleme"
         resources:

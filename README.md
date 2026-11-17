@@ -73,6 +73,29 @@ docker compose up --build
 
 Uygulama <http://localhost:8080> adresinde açılır. Veritabanı şifresi koda yazılmaz; `.env` dosyasından okunur.
 
+## Kubernetes veritabanı yapılandırması
+
+Web ve MySQL manifestleri parolayı `kurutemizleme-db` isimli Secret'ın
+`MYSQL_ROOT_PASSWORD` alanından okur. Manifestleri uygulamadan önce, hedef namespace
+içinde kendi `.env` dosyanızdan Secret oluşturun:
+
+```bash
+kubectl create secret generic kurutemizleme-db --from-env-file=.env --dry-run=client -o yaml | kubectl apply -f -
+```
+
+`.env` dosyasını veya Secret çıktısını Git'e eklemeyin. Secret, şifreleme ve erişim
+denetiminin yerine geçmez; küme RBAC ve depolama ayarları ayrıca yönetilmelidir.
+
+**Mevcut veritabanı:** MySQL kalıcı diskinde veri varsa, bu ortam değişkenini veya
+Secret'ı değiştirmek veritabanındaki kullanıcı parolasını değiştirmez. İlk geçişte
+Secret mevcut veritabanı parolasıyla eşleşmelidir. Parola yenilemesi, veritabanındaki
+hesap ve uygulama yapılandırması birlikte güncellenerek yapılmalıdır. Veri diskini
+silerek parola değişikliği yapmayın.
+
+Mevcut pipeline `main` dalına yapılan push sonrasında GKE dağıtımı başlatır. Bu
+değişiklik birleştirilmeden önce Secret hedef kümede hazır olmalıdır. Yerel Compose
+kurulumu da artık boş/eksik parola yerine açık bir yapılandırma hatası verir.
+
 ## Belgeler
 
 - Proje raporu: [PDF](Bulut-Bilisim-ve-Kubernetes-Tabanli-Kuru-Temizleme-Yonetim-Sistemi.pdf.pdf)
